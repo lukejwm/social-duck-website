@@ -1,0 +1,1 @@
+export { TechMediaPostcard } from "./TechMediaPostcard";
