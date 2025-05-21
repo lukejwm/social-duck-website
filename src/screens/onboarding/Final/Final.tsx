@@ -1,13 +1,20 @@
 import { Button } from "../../../components/ui/button";
 import { Card, CardContent } from "../../../components/ui/card";
+import { useNavigate } from "react-router-dom";
 
 export const Final = (): JSX.Element => {
+    const navigate = useNavigate();
+    
     const successMessages = [
         "Success!",
         "Congratulations! Your new website management hub have been successfully created.",
         "In the management hub, you can make edits to your website and publish them. Your changes will appear live within minutes after publishing.",
         "Utilize the marketing tools to connect your social media accounts and schedule posts across all your profiles.",
     ];
+    
+    const handleFinish = () => {
+        navigate("/dashboard");
+    };
 
     return (
         <div className="bg-[#ffde59] flex flex-row justify-center w-full min-h-screen">
@@ -36,7 +43,10 @@ export const Final = (): JSX.Element => {
 
                                 {/* Finish button */}
                                 <div className="flex justify-center mt-6">
-                                    <Button className="bg-black text-white rounded-lg border-4 border-solid border-[#1a1a1a] h-[38px] px-4 py-3">
+                                    <Button 
+                                        className="bg-black text-white rounded-lg border-4 border-solid border-[#1a1a1a] h-[38px] px-4 py-3"
+                                        onClick={handleFinish}
+                                    >
                     <span className="font-patrick-hand-body-lg font-[number:var(--patrick-hand-body-lg-font-weight)] text-[length:var(--patrick-hand-body-lg-font-size)] tracking-[var(--patrick-hand-body-lg-letter-spacing)] leading-[var(--patrick-hand-body-lg-line-height)] whitespace-nowrap [font-style:var(--patrick-hand-body-lg-font-style)]">
                       Finish
                     </span>
