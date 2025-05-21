@@ -1,4 +1,4 @@
-import { Card, CardContent } from "../../components/ui/card";
+import { Card, CardContent } from "../../../components/ui/card.tsx";
 import { Link } from "react-router-dom";
 
 export const ForgotPassword = (): JSX.Element => {

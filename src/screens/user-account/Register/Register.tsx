@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Button } from "../../components/ui/button";
-import { Card, CardContent } from "../../components/ui/card";
-import { Input } from "../../components/ui/input";
+import { Button } from "../../../components/ui/button.tsx";
+import { Card, CardContent } from "../../../components/ui/card.tsx";
+import { Input } from "../../../components/ui/input.tsx";
 import { Link, useNavigate } from "react-router-dom";
 import { FaHome, FaEnvelope, FaLock } from "react-icons/fa"; // import icons
 
@@ -24,7 +24,7 @@ export const Register = (): JSX.Element => {
       return;
     }
     setError("");
-    navigate("/business-details");
+    navigate("/onboarding/1/business-details");
   };
 
   return (

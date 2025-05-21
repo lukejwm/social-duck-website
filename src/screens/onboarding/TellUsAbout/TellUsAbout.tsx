@@ -1,30 +1,34 @@
-import React, { useState } from "react";
-import { Button } from "../../components/ui/button";
-import { Card, CardContent } from "../../components/ui/card";
-import { Textarea } from "../../components/ui/textarea";
+import { useState } from "react";
+import { Button } from "../../../components/ui/button.tsx";
+import { Card, CardContent } from "../../../components/ui/card.tsx";
+import ReactQuill from "react-quill"; // Import React-Quill
+import "react-quill/dist/quill.snow.css"; // Import Quill's default CSS
 import { useNavigate } from "react-router-dom";
+import "react-quill/dist/quill.snow.css";
+
 
 export const TellUsAbout = (): JSX.Element => {
   const [content, setContent] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newContent = e.target.value;
-    setContent(newContent);
+  // Handle Quill editor content change
+  const handleChange = (value: string) => {
+    setContent(value);
 
-    if (newContent.length < 150) {
+    if (value.length < 150) {
       setError("Content must be at least 150 characters.");
-    } else if (newContent.length > 500) {
+    } else if (value.length > 500) {
       setError("Content must be less than 500 characters.");
     } else {
       setError(""); // Clear error if valid
     }
   };
 
+  // Handle submit action
   const handleSubmit = () => {
     if (content.length >= 150 && content.length <= 500) {
-      navigate("/preview-content");
+      navigate("/onboarding/3/preview-text");
     }
   };
 
@@ -43,11 +47,26 @@ export const TellUsAbout = (): JSX.Element => {
                 </p>
 
                 <div className="relative">
-                  <Textarea
-                      className="min-h-[184px] p-4 border-3 border-black rounded-lg font-patrick-hand-body text-lg placeholder:text-gray-400"
-                      placeholder="Tell us about your business..."
+                  {/* ReactQuill Editor */}
+                  <ReactQuill
                       value={content}
                       onChange={handleChange}
+                      className="min-h-[184px] p-4 border-3 border-black rounded-lg font-patrick-hand-body text-lg placeholder:text-gray-400"
+                      placeholder="Tell us about your business..."
+                      modules={{
+                        toolbar: [
+                          [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
+                          [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                          ['bold', 'italic', 'underline'],
+                          ['link'],
+                          [{ 'align': [] }],
+                          ['image'],
+                          ['blockquote'],
+                          [{ 'script': 'sub' }, { 'script': 'super' }],
+                          [{ 'direction': 'rtl' }],
+                          ['clean'],
+                        ],
+                      }}
                   />
                   <img
                       className="absolute bottom-2 right-2 w-3.5 h-3.5"
