@@ -1,23 +1,52 @@
 import { useState } from "react";
 import { LockIcon, User2Icon } from "lucide-react";
-import { Button } from "../../../components/ui/button.tsx";
-import { Card, CardContent } from "../../../components/ui/card.tsx";
-import { Input } from "../../../components/ui/input.tsx";
-import { Link } from "react-router-dom";
+import { Button } from "../../../components/ui/button";
+import { Card, CardContent } from "../../../components/ui/card";
+import { Input } from "../../../components/ui/input";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../../contexts/AuthContext";
 
 export const Login = (): JSX.Element => {
-    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+    const { login } = useAuth();
 
-    const handleLogin = () => {
-        if (!username || !password) {
+    const handleLogin = async () => {
+        if (!email || !password) {
             setError("Please fill in both fields.");
             return;
         }
+        
         setError("");
-        console.log("Logging in with", { username, password });
-        // Perform login logic here
+        setLoading(true);
+
+        try {
+            const response = await fetch(`http://localhost:8080/business/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Login failed');
+            }
+
+            const data = await response.json();
+            
+            await login(email, data.id);
+            
+            navigate("/dashboard");
+        } catch (error) {
+            console.error("Login error:", error);
+            setError("Invalid email or password.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -31,24 +60,6 @@ export const Login = (): JSX.Element => {
 
                 <Card className="w-[361px] border-3 border-black shadow-[0px_4px_4px_#00000040] relative">
                     <CardContent className="p-6">
-                        {/*<div className="absolute -right-20 top-0 flex items-center">*/}
-                        {/*    <img*/}
-                        {/*        className="w-[60px] h-[60px] object-cover"*/}
-                        {/*        alt="Social duck logo"*/}
-                        {/*        src="/img/social-duck-logo-1.png"*/}
-                        {/*    />*/}
-                        {/*    <div className="bg-white p-3 rounded-xl border-3 border-black shadow-small relative ml-2">*/}
-                        {/*        <p className="font-patrick-hand-body text-base">*/}
-                        {/*            Welcome back to Social Duck!*/}
-                        {/*        </p>*/}
-                        {/*        <img*/}
-                        {/*            className="absolute w-4 h-[25px] top-3.5 -left-2.5"*/}
-                        {/*            alt="Left beak"*/}
-                        {/*            src="/img/left-beak.svg"*/}
-                        {/*        />*/}
-                        {/*    </div>*/}
-                        {/*</div>*/}
-
                         <div className="mb-8">
                             <h1 className="font-patrick-hand text-2xl tracking-[0.06px]">
                                 Login
@@ -63,9 +74,11 @@ export const Login = (): JSX.Element => {
                                 <User2Icon className="w-8 h-8" />
                                 <Input
                                     className="border-0 bg-transparent font-patrick-hand-body text-black placeholder:text-black focus-visible:ring-0"
-                                    placeholder="Username"
-                                    value={username}
-                                    onChange={(e) => setUsername(e.target.value)}
+                                    placeholder="Email"
+                                    type="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    disabled={loading}
                                 />
                             </div>
 
@@ -77,6 +90,7 @@ export const Login = (): JSX.Element => {
                                     placeholder="Password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
+                                    disabled={loading}
                                 />
                             </div>
 
@@ -85,8 +99,11 @@ export const Login = (): JSX.Element => {
                             <Button
                                 className="w-full h-[52px] bg-black text-white rounded-lg border-4 border-black hover:bg-black/90"
                                 onClick={handleLogin}
+                                disabled={loading || !email || !password}
                             >
-                                <span className="font-patrick-hand-body-lg">Login</span>
+                                <span className="font-patrick-hand-body-lg">
+                                    {loading ? "Signing In..." : "Login"}
+                                </span>
                             </Button>
 
                             <div className="text-center mt-4">
