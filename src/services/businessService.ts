@@ -6,6 +6,7 @@ export interface BusinessInfo {
   address: string;
   town_city: string;
   type: string;
+  password?: string;
 }
 
 export interface BusinessUser extends BusinessInfo {
@@ -45,8 +46,16 @@ export interface BusinessAlert {
 }
 
 const businessService = {
-  register: async (businessData: BusinessInfo): Promise<BusinessUser> => {
+  register: async (businessData: BusinessInfo & { password: string }): Promise<BusinessUser> => {
     const response = await api.post('/business/register', businessData);
+    return response.data;
+  },
+  
+  login: async (email: string, password: string): Promise<{id: number; email: string; business_name: string; token: string}> => {
+    const response = await api.post('/business/login', {
+      email,
+      password
+    });
     return response.data;
   },
 
