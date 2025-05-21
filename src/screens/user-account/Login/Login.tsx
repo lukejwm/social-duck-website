@@ -5,6 +5,7 @@ import { Card, CardContent } from "../../../components/ui/card";
 import { Input } from "../../../components/ui/input";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../contexts/AuthContext";
+import businessService from "../../../services/businessService";
 
 export const Login = (): JSX.Element => {
     const [email, setEmail] = useState("");
@@ -24,19 +25,7 @@ export const Login = (): JSX.Element => {
         setLoading(true);
 
         try {
-            const response = await fetch(`http://localhost:8080/business/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, password }),
-            });
-
-            if (!response.ok) {
-                throw new Error('Login failed');
-            }
-
-            const data = await response.json();
+            const data = await businessService.login(email, password);
             
             await login(email, data.id);
             

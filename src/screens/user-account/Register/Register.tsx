@@ -37,7 +37,8 @@ export const Register = (): JSX.Element => {
         business_name: form.businessName,
         address: "", // Will be filled in during the onboarding process
         town_city: "", // Will be filled in during the onboarding process
-        type: "" // Will be filled in during the onboarding process
+        type: "", // Will be filled in during the onboarding process
+        password: form.password
       };
 
       const response = await businessService.register(businessData);
