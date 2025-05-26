@@ -16,7 +16,8 @@ export const Dashboard = (): JSX.Element => {
   const [stats, setStats] = useState({
     total: 0,
     positive: 0,
-    negative: 0
+    negative: 0,
+    businessScore: 0
   });
   const navigate = useNavigate();
 
@@ -30,10 +31,13 @@ export const Dashboard = (): JSX.Element => {
         
         const positive = allReviews.filter(review => review.star_rating > 3).length;
         const negative = allReviews.length - positive;
+        const businessScore = businessService.calculateBusinessScore(allReviews);
+        
         setStats({
           total: allReviews.length,
           positive,
-          negative
+          negative,
+          businessScore
         });
         
         const alertsData = await businessService.getAlerts(currentUser.id);
@@ -81,7 +85,7 @@ export const Dashboard = (): JSX.Element => {
         </div>
         
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <Card className="bg-white border-2 border-black">
             <CardContent className="p-4 text-center">
               <h3 className="text-xl font-patrick-hand">Total Reviews</h3>
@@ -100,6 +104,13 @@ export const Dashboard = (): JSX.Element => {
             <CardContent className="p-4 text-center">
               <h3 className="text-xl font-patrick-hand">Negative Reviews</h3>
               <p className="text-3xl font-bold">{stats.negative}</p>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-blue-100 border-2 border-black">
+            <CardContent className="p-4 text-center">
+              <h3 className="text-xl font-patrick-hand">Business Score</h3>
+              <p className="text-3xl font-bold">{stats.businessScore}</p>
             </CardContent>
           </Card>
         </div>
