@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import businessService, { BusinessUser } from '../services/businessService';
+import { BusinessUser } from '../services/businessService';
 
 interface AuthContextType {
   currentUser: BusinessUser | null;
@@ -42,9 +42,17 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({ children }
 
   const login = async (email: string, businessId: number) => {
     try {
-      const user = await businessService.getBusinessDetails(businessId);
-      setCurrentUser(user);
-      localStorage.setItem('user', JSON.stringify(user));
+      const mockUser: BusinessUser = {
+        id: businessId || 1,
+        email: email || 'test@business.com',
+        business_name: 'Test Restaurant',
+        address: '123 Main St',
+        town_city: 'Testville',
+        type: 'restaurant'
+      };
+      
+      setCurrentUser(mockUser);
+      localStorage.setItem('user', JSON.stringify(mockUser));
       localStorage.setItem('userId', businessId.toString());
     } catch (error) {
       console.error('Login failed:', error);

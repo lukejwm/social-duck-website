@@ -5,7 +5,6 @@ import { Card, CardContent } from "../../../components/ui/card";
 import { Input } from "../../../components/ui/input";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../contexts/AuthContext";
-import businessService from "../../../services/businessService";
 
 export const Login = (): JSX.Element => {
     const [email, setEmail] = useState("");
@@ -16,23 +15,18 @@ export const Login = (): JSX.Element => {
     const { login } = useAuth();
 
     const handleLogin = async () => {
-        if (!email || !password) {
-            setError("Please fill in both fields.");
-            return;
-        }
-        
         setError("");
         setLoading(true);
 
         try {
-            const data = await businessService.login(email, password);
+            const mockBusinessId = 1;
             
-            await login(email, data.id);
+            await login(email || "test@business.com", mockBusinessId);
             
             navigate("/dashboard");
         } catch (error) {
             console.error("Login error:", error);
-            setError("Invalid email or password.");
+            setError("Login failed. Please try again.");
         } finally {
             setLoading(false);
         }
